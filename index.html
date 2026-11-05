@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kevin Phi Dinh</title>
+<meta name="description" content="Kevin Phi Dinh – cybersecurity graduate with skills in penetration testing, AWS and full-stack development.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf3ea;
+    --surface: #fffaf4;
+    --text: #2b1d14;
+    --muted: #76604e;
+    --line: #ecd9c4;
+    --accent: #b0451b;
+    --accent-soft: #f7e0cc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1410;
+      --surface: #261b15;
+      --text: #f2e7db;
+      --muted: #b8a18c;
+      --line: #3d2c21;
+      --accent: #eb9653;
+      --accent-soft: #3b2518;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1410; --surface: #261b15; --text: #f2e7db; --muted: #b8a18c;
+    --line: #3d2c21; --accent: #eb9653; --accent-soft: #3b2518;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 400 17px/1.65 Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 960px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+
+  /* Navigasjon */
+  nav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-family: Fraunces, serif; font-weight: 700; font-size: 20px; color: var(--text); }
+  nav ul { display: flex; gap: 24px; list-style: none; font-size: 15px; }
+  nav ul a { color: var(--muted); }
+  nav ul a:hover { color: var(--text); text-decoration: none; }
+
+  /* Hero */
+  .hero { padding-block: 96px 80px; display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+  .eyebrow { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { font-family: Fraunces, serif; font-weight: 700; font-size: clamp(40px, 7vw, 68px); line-height: 1.05; margin: 12px 0 20px; letter-spacing: -.02em; }
+  .lead { font-size: 20px; color: var(--muted); max-width: 520px; }
+  .cta { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 15px; border: 1px solid var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); }
+  .btn.ghost { color: var(--accent); }
+  .btn:hover { text-decoration: none; opacity: .88; }
+  .avatar {
+    width: 260px; height: 260px; border-radius: 50%;
+    background: var(--accent-soft); border: 1px solid var(--line);
+    display: grid; place-items: center; overflow: hidden;
+    font-family: Fraunces, serif; font-size: 72px; color: var(--accent);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Seksjoner */
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  h2 { font-family: Fraunces, serif; font-weight: 500; font-size: 34px; margin-bottom: 28px; letter-spacing: -.01em; }
+  .about { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; }
+  .about p + p { margin-top: 16px; }
+  .facts { list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; align-self: start; }
+  .facts li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .facts li:last-child { border-bottom: 0; }
+  .facts span:first-child { color: var(--muted); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; }
+  .tag { background: var(--accent-soft); color: var(--accent); padding: 8px 16px; border-radius: 999px; font-size: 15px; font-weight: 500; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px; }
+  .card .icon { font-size: 28px; margin-bottom: 12px; }
+  .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 15px; }
+
+  .timeline { list-style: none; border-left: 2px solid var(--line); padding-left: 28px; }
+  .timeline li { position: relative; padding-bottom: 32px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before {
+    content: ""; position: absolute; left: -36px; top: 7px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--accent);
+  }
+  .when { color: var(--accent); font-size: 14px; font-weight: 600; }
+  .timeline h3 { font-size: 18px; font-weight: 600; margin: 2px 0 4px; }
+  .timeline p { color: var(--muted); font-size: 15px; }
+
+  blockquote { font-family: Fraunces, serif; font-size: clamp(24px, 4vw, 34px); line-height: 1.3; max-width: 720px; }
+  blockquote footer { font-family: Inter, sans-serif; font-size: 15px; color: var(--muted); margin-top: 16px; }
+
+  .contact { text-align: center; }
+  .contact p { color: var(--muted); max-width: 520px; margin: 0 auto 28px; }
+  .contact .cta { justify-content: center; }
+
+  footer.site { padding: 32px 0 4px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; text-align: center; }
+
+  @media (max-width: 720px) {
+    nav ul { display: none; }
+    .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    .hero { grid-template-columns: 1fr; padding-block: 56px 48px; gap: 32px; }
+    .avatar { width: 140px; height: 140px; font-size: 48px; order: -1; }
+    .about { grid-template-columns: 1fr; gap: 28px; }
+    section { padding: 56px 0; }
+  }
+
+  .skill-groups { display: grid; gap: 28px; }
+  .group-label { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .project { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 32px; display: grid; gap: 14px; max-width: 760px; }
+  .project-meta { color: var(--accent); font-size: 14px; font-weight: 600; }
+  .project h3 { font-family: Fraunces, serif; font-weight: 500; font-size: 26px; line-height: 1.2; text-wrap: balance; }
+  .project p { color: var(--muted); }
+  @media (max-width: 720px) { .project { padding: 22px; } }
+
+  /* ============================================================
+     ÅRSTIDER / SEASONS
+     Autumn uses the base tokens above. The other seasons override
+     them. The season is set on <html data-season="..."> by the
+     script below, based on today's date (or #winter, #spring,
+     #summer, #autumn in the address for testing).
+     ============================================================ */
+  :root { --fx: #b0451b; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fx: #eb9653; } }
+  :root[data-theme="dark"] { --fx: #eb9653; }
+
+  /* Winter: cold blue and frost */
+  :root[data-season="winter"] {
+    --bg: #f1f5f9; --surface: #fbfdff; --text: #142030; --muted: #5a6b7d;
+    --line: #d8e2ec; --accent: #275d8f; --accent-soft: #dde9f4; --fx: #8aaccc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root[data-season="winter"]:not([data-theme="light"]) {
+      --bg: #0e141b; --surface: #151f29; --text: #e7eef6; --muted: #9babbc;
+      --line: #25323f; --accent: #8fc1ea; --accent-soft: #1b2b3a; --fx: #ffffff;
+    }
+  }
+  :root[data-season="winter"][data-theme="dark"] {
+    --bg: #0e141b; --surface: #151f29; --text: #e7eef6; --muted: #9babbc;
+    --line: #25323f; --accent: #8fc1ea; --accent-soft: #1b2b3a; --fx: #ffffff;
+  }
+
+  /* Spring: fresh green */
+  :root[data-season="spring"] {
+    --bg: #f5f8ee; --surface: #fcfdf8; --text: #1d2617; --muted: #5d6a52;
+    --line: #dde6cd; --accent: #4a7a26; --accent-soft: #e3eed4; --fx: #8e9882;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root[data-season="spring"]:not([data-theme="light"]) {
+      --bg: #11160e; --surface: #192015; --text: #eaf0e1; --muted: #a2ad95;
+      --line: #2a3322; --accent: #a7d47b; --accent-soft: #233119; --fx: #edf3e4;
+    }
+  }
+  :root[data-season="spring"][data-theme="dark"] {
+    --bg: #11160e; --surface: #192015; --text: #eaf0e1; --muted: #a2ad95;
+    --line: #2a3322; --accent: #a7d47b; --accent-soft: #233119; --fx: #edf3e4;
+  }
+
+  /* Summer: warm sand and sea */
+  :root[data-season="summer"] {
+    --bg: #fff7e9; --surface: #fffcf6; --text: #2a1d0d; --muted: #77634a;
+    --line: #f0e0c2; --accent: #0b7a85; --accent-soft: #dcf0ef; --fx: #ffa834;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root[data-season="summer"]:not([data-theme="light"]) {
+      --bg: #17130c; --surface: #211b11; --text: #f7eddc; --muted: #bcaa8c;
+      --line: #3a301f; --accent: #5fd1d8; --accent-soft: #15323a; --fx: #ff9a2e;
+    }
+  }
+  :root[data-season="summer"][data-theme="dark"] {
+    --bg: #17130c; --surface: #211b11; --text: #f7eddc; --muted: #bcaa8c;
+    --line: #3a301f; --accent: #5fd1d8; --accent-soft: #15323a; --fx: #ff9a2e;
+  }
+
+  /* Animation layer */
+  #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+  #sun {
+    position: fixed; top: -30vmax; right: -30vmax; width: 80vmax; height: 80vmax;
+    border-radius: 50%; pointer-events: none; z-index: 0; display: none;
+    background: radial-gradient(circle, color-mix(in srgb, var(--fx) 45%, transparent) 0%, color-mix(in srgb, var(--fx) 12%, transparent) 40%, transparent 70%);
+    animation: sun-pulse 6s ease-in-out infinite;
+  }
+  :root[data-season="summer"] #sun { display: block; }
+  @keyframes sun-pulse { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.06); opacity: 1; } }
+  nav, header, section, footer.site { position: relative; z-index: 1; }
+  nav { z-index: 10; }
+  .season-label { display: block; margin-top: 6px; }
+  @media (prefers-reduced-motion: reduce) { #sun { animation: none; } }
+
+  /* Pile of snow / leaves / seeds / sand at the bottom of the page */
+  .pile { position: relative; z-index: 2; height: 150px; }
+  #pile { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+  @media (max-width: 720px) { .pile { height: 110px; } }
+
+  /* TEST: season switcher (turn off with SHOW_SEASON_SWITCHER = false in the script) */
+  .season-switch {
+    position: fixed; z-index: 20;
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center; gap: 4px; padding: 6px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .12);
+    font: 500 13px/1 Inter, system-ui, sans-serif;
+  }
+  .season-switch span { color: var(--muted); padding: 0 8px 0 10px; }
+  .season-switch button {
+    border: 0; background: transparent; color: var(--text); cursor: pointer;
+    padding: 8px 12px; border-radius: 999px; font: inherit;
+  }
+  .season-switch button:hover { background: var(--accent-soft); }
+  .season-switch button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+  .season-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (max-width: 520px) {
+    .season-switch { left: calc(16px + env(safe-area-inset-left, 0px)); justify-content: space-between; }
+    .season-switch span { display: none; }
+    .season-switch button { padding: 8px 6px; }
+  }
+</style>
+<script>
+  // Pick the season from today's date (Norway: Dec–Feb winter, Mar–May spring, Jun–Aug summer, Sep–Nov autumn)
+  (function () {
+    var m = new Date().getMonth();
+    var s = (m === 11 || m <= 1) ? 'winter' : m <= 4 ? 'spring' : m <= 7 ? 'summer' : 'autumn';
+    var h = location.hash.slice(1);
+    if (['winter', 'spring', 'summer', 'autumn'].indexOf(h) > -1) s = h;
+    document.documentElement.setAttribute('data-season', s);
+  })();
+</script>
+</head>
+<body>
+<div id="sun" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">Kevin Dinh</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#project">Project</a></li>
+      <li><a href="#journey">Journey</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="wrap hero">
+  <div>
+    <div class="eyebrow">Cybersecurity · Full-Stack · AWS</div>
+    <h1>Hi, I'm Kevin Phi Dinh.</h1>
+    <p class="lead">Cybersecurity graduate from Kristiania University College (2025). I'm looking for junior roles in cybersecurity or full-stack development in Oslo/Akershus or remote.</p>
+    <div class="cta">
+      <a href="#contact" class="btn primary">Get in touch</a>
+      <a href="https://www.linkedin.com/in/kevin-dinh-4637032bb/" class="btn ghost" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/kevindinh0102" class="btn ghost" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="avatar"><img src="profil.jpg" alt="Kevin Phi Dinh" width="640" height="640"></div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <h2>About me</h2>
+    <div class="about">
+      <div>
+        <p>I'm a cybersecurity graduate from Kristiania University College with a strong foundation in secure application development, cloud security (AWS) and penetration testing.</p>
+        <p>What I value most is continuous learning and applying technical depth to real problems. I bring reliability, structure and drive to a professional environment.</p>
+        <p>Alongside my job search I work part-time at a sushi restaurant, and in my free time I'm a youth leader in my church.</p>
+      </div>
+      <ul class="facts">
+        <li><span>Location</span><span>Ytre Enebakk, Norway</span></li>
+        <li><span>Education</span><span>BSc in Cybersecurity, Kristiania (2022–2025)</span></li>
+        <li><span>Looking for</span><span>SOC, GRC, cloud security, AppSec or full-stack</span></li>
+        <li><span>Work area</span><span>Oslo/Akershus or remote</span></li>
+        <li><span>Languages</span><span>Norwegian, English, Vietnamese</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <h2>What I'm good at</h2>
+    <div class="skill-groups">
+      <div>
+        <h3 class="group-label">Security</h3>
+        <div class="tags">
+          <span class="tag">Penetration testing</span>
+          <span class="tag">Information security</span>
+          <span class="tag">Cloud security (AWS)</span>
+          <span class="tag">Secure application development</span>
+          <span class="tag">Burp Suite</span>
+          <span class="tag">Wireshark</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="group-label">Development</h3>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">C</span>
+          <span class="tag">Java</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+          <span class="tag">OpenAI API</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="group-label">Other</h3>
+        <div class="tags">
+          <span class="tag">User testing</span>
+          <span class="tag">Leadership</span>
+          <span class="tag">Customer service</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="project">
+  <div class="wrap">
+    <h2>Project</h2>
+    <article class="project">
+      <div class="project-meta">Bachelor's degree · In collaboration with Yobr AS</div>
+      <h3>AI agent MVP, from idea to deployment</h3>
+      <p>Together with my team, I built an end-to-end AI agent MVP for a real company. We worked across architecture, development, API integration and user testing. The project gave me hands-on experience delivering a full-stack product in a professional setting, from initial design through to deployment.</p>
+      <div class="tags">
+        <span class="tag">TypeScript</span>
+        <span class="tag">React</span>
+        <span class="tag">Next.js</span>
+        <span class="tag">OpenAI API</span>
+        <span class="tag">User testing</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="interests">
+  <div class="wrap">
+    <h2>Outside of work</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🧗</div>
+        <h3>Bouldering</h3>
+        <p>Problem-solving on the wall. Every route takes strength, technique and patience.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏋️</div>
+        <h3>Weight training</h3>
+        <p>Steady effort over time pays off, in the gym and everywhere else.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤝</div>
+        <h3>Youth leader in church</h3>
+        <p>I enjoy building a safe community and being a good support for young people.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="wrap">
+    <h2>My journey</h2>
+    <ul class="timeline">
+      <li>
+        <div class="when">Now</div>
+        <h3>Looking for a junior role</h3>
+        <p>In SOC, GRC, cloud security, AppSec or full-stack development, in Oslo/Akershus or remote.</p>
+      </li>
+      <li>
+        <div class="when">Part-time</div>
+        <h3>Sushi restaurant</h3>
+        <p>Service, teamwork and a fast pace on busy days.</p>
+      </li>
+      <li>
+        <div class="when">Volunteer</div>
+        <h3>Youth leader in church</h3>
+        <p>Planning activities and looking after the young people in the group.</p>
+      </li>
+      <li>
+        <div class="when">2022 – 2025</div>
+        <h3>BSc in Cybersecurity – Kristiania University College</h3>
+        <p>Secure application development, cloud security, penetration testing and an AI project with Yobr AS.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <blockquote>
+      “I always want to learn something new that helps me grow.”
+      <footer>— Kevin Phi Dinh</footer>
+    </blockquote>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2>Let's talk</h2>
+    <p>Looking for a motivated junior in cybersecurity or development? Feel free to reach out at <a href="mailto:kevindinh0102@gmail.com">kevindinh0102@gmail.com</a>.</p>
+    <div class="cta">
+      <a href="mailto:kevindinh0102@gmail.com" class="btn primary">Send an email</a>
+      <a href="https://www.linkedin.com/in/kevin-dinh-4637032bb/" class="btn ghost" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/kevindinh0102" class="btn ghost" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site">
+  <div class="wrap">
+    ©<span id="year"></span> Kevin Phi Dinh
+    <span class="season-label" id="season-label"></span>
+  </div>
+</footer>
+<div class="pile" aria-hidden="true"><canvas id="pile"></canvas></div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+(function () {
+  var root = document.documentElement;
+  var canvas = document.getElementById('fx');
+  var ctx = canvas.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LABELS = {
+    winter: '❄️ Winter theme · this page changes with the seasons',
+    spring: '🌼 Spring theme · this page changes with the seasons',
+    summer: '☀️ Summer theme · this page changes with the seasons',
+    autumn: '🍂 Autumn theme · this page changes with the seasons'
+  };
+  // How many particles on arrival, and how many keep going afterwards
+  var COUNTS = {
+    autumn: [45, 14], winter: [90, 45], spring: [34, 12], summer: [26, 14]
+  };
+  var LEAF_COLORS = ['#c2410c', '#d97706', '#b45309', '#e0a12b', '#9a3412', '#a3471f'];
+
+  var W, H, parts = [], raf = null, season, started;
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function fxColor() { return getComputedStyle(root).getPropertyValue('--fx').trim() || '#999'; }
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function make(arrival) {
+    var p = { t: rand(0, Math.PI * 2) };
+    if (season === 'autumn') {
+      p.x = rand(0, W); p.y = arrival ? rand(-H, -20) : rand(-60, -20);
+      p.s = rand(7, 14); p.vy = rand(0.7, 1.6); p.vx = rand(-0.4, 0.4);
+      p.rot = rand(0, 6.28); p.vr = rand(-0.04, 0.04); p.sway = rand(0.5, 1.4);
+      p.c = pick(LEAF_COLORS);
+    } else if (season === 'winter') {
+      p.x = rand(0, W); p.y = arrival ? rand(-H * 0.5, H) : rand(-20, -5);
+      p.s = rand(4, 11); p.vy = rand(0.4, 1.2); p.vx = rand(-0.2, 0.2); p.sway = rand(0.2, 0.7);
+      p.rot = rand(0, Math.PI); p.vr = rand(-0.012, 0.012);
+    } else if (season === 'spring') {
+      p.x = arrival ? rand(-W * 0.8, 0) : rand(-60, -20); p.y = rand(H * 0.05, H * 0.95);
+      p.s = rand(8, 13); p.vx = rand(0.7, 1.6); p.vy = rand(-0.35, 0.05); p.sway = rand(0.3, 0.9);
+    } else {
+      p.x = rand(0, W); p.y = arrival ? rand(H * 0.2, H * 1.1) : H + rand(10, 60);
+      p.s = rand(18, 55); p.vy = -rand(0.25, 0.7); p.vx = rand(-0.15, 0.15);
+      p.life = 0; p.max = rand(350, 800);
+    }
+    return p;
+  }
+
+  function gone(p) {
+    if (season === 'spring') return p.x > W + 40 || p.y < -40 || p.y > H + 40;
+    if (season === 'summer') return p.life > p.max || p.y < -80;
+    return p.y > H + 30;
+  }
+
+  function step(p) {
+    p.t += 0.02;
+    if (season === 'autumn') {
+      p.x += p.vx + Math.sin(p.t) * p.sway; p.y += p.vy; p.rot += p.vr + Math.cos(p.t) * 0.01;
+    } else if (season === 'winter') {
+      p.x += p.vx + Math.sin(p.t) * p.sway * 0.5; p.y += p.vy; p.rot += p.vr;
+    } else if (season === 'spring') {
+      p.x += p.vx; p.y += p.vy + Math.sin(p.t) * p.sway * 0.4;
+    } else {
+      p.x += p.vx + Math.sin(p.t) * 0.25; p.y += p.vy; p.life++;
+    }
+  }
+
+  function drawLeaf(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+    ctx.scale(1, Math.abs(Math.cos(p.t * 1.3)) * 0.5 + 0.5); // tumbling
+    ctx.fillStyle = p.c; ctx.globalAlpha = 0.9;
+    var s = p.s;
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.bezierCurveTo(s * 0.9, -s * 0.6, s * 0.7, s * 0.5, 0, s);
+    ctx.bezierCurveTo(-s * 0.7, s * 0.5, -s * 0.9, -s * 0.6, 0, -s);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(60,25,10,.45)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, -s * 0.8); ctx.lineTo(0, s * 1.3); ctx.stroke();
+    ctx.restore();
+  }
+
+  // Six-armed snow crystal with little side branches
+  function drawSnow(p, color) {
+    var s = p.s;
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+    ctx.strokeStyle = color; ctx.globalAlpha = 0.9;
+    ctx.lineWidth = s > 8 ? 1.4 : 1.1; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      ctx.moveTo(0, 0); ctx.lineTo(0, -s);                        // arm
+      ctx.moveTo(0, -s * 0.55); ctx.lineTo(s * 0.28, -s * 0.78);  // branches
+      ctx.moveTo(0, -s * 0.55); ctx.lineTo(-s * 0.28, -s * 0.78);
+      if (s > 7) {
+        ctx.moveTo(0, -s * 0.3); ctx.lineTo(s * 0.18, -s * 0.44);
+        ctx.moveTo(0, -s * 0.3); ctx.lineTo(-s * 0.18, -s * 0.44);
+      }
+      ctx.rotate(Math.PI / 3);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSeed(p, color) {
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(Math.sin(p.t) * 0.35 + 0.4);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.globalAlpha = 0.85; ctx.lineWidth = 0.8;
+    var s = p.s;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, s); ctx.stroke();       // stem
+    ctx.beginPath(); ctx.ellipse(0, s + 1.5, 1, 2.2, 0, 0, Math.PI * 2); ctx.fill(); // seed
+    for (var i = 0; i < 11; i++) {                                            // fluffy umbrella
+      var a = -Math.PI + (i / 10) * Math.PI;
+      var len = s * 0.75;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(a) * len, Math.sin(a) * len * 0.8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(Math.cos(a) * len, Math.sin(a) * len * 0.8, 0.8, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawHeat(p, color) {
+    var k = p.life / p.max;
+    var a = Math.sin(Math.min(k, 1) * Math.PI) * 0.35;
+    var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.s);
+    var n = parseInt(color.replace('#', ''), 16);
+    var rgb = ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255);
+    g.addColorStop(0, 'rgba(' + rgb + ',1)'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
+    ctx.globalAlpha = a; ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function frame(now) {
+    ctx.clearRect(0, 0, W, H);
+    var c = COUNTS[season];
+    // Taper from the arrival burst down to a calm, steady amount over ~8 seconds
+    var k = Math.min((now - started) / 8000, 1);
+    var target = Math.round(c[0] + (c[1] - c[0]) * k);
+    var color = fxColor();
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      step(p);
+      if (gone(p)) { if (parts.length > target) parts.splice(i, 1); else parts[i] = make(false); continue; }
+      if (season === 'autumn') drawLeaf(p);
+      else if (season === 'winter') drawSnow(p, color);
+      else if (season === 'spring') drawSeed(p, color);
+      else drawHeat(p, color);
+    }
+    while (parts.length < target) parts.push(make(false));
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(frame);
+  }
+
+  // ---------- Pile at the bottom of the page (move the mouse over it) ----------
+  var pc = document.getElementById('pile'), pctx = pc.getContext('2d');
+  var PW = 0, PH = 0, pile = [], mound = [], pileRaf = null, pileVisible = true, pileDark = false, lastPtr = null;
+  var PILE = {
+    autumn: { per: 0.42, g: 0.12, drag: 0.97, base: ['#b0602c', '#6e3a1c'] },
+    winter: { per: 0.38, g: 0.18, drag: 0.98, base: ['#ffffff', '#dfe8f1'] },
+    spring: { per: 0.22, g: 0.04, drag: 0.95, base: ['#86b25a', '#466d2c'] },
+    summer: { per: 0.34, g: 0.25, drag: 0.97, base: ['#ecd49f', '#a88b52'] }
+  };
+
+  function isDark() {
+    var n = parseInt(getComputedStyle(root).getPropertyValue('--bg').trim().replace('#', ''), 16);
+    return (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) < 110;
+  }
+  function moundH(x) {
+    var h = PH * 0.12;
+    for (var i = 0; i < mound.length; i++) { var d = (x - mound[i].x) / mound[i].w; h += mound[i].h * Math.exp(-d * d); }
+    var cap = PH * 0.8;
+    return cap * (1 - Math.exp(-h / cap)); // soft cap: rounded tops, never flat
+  }
+  function makeItem(x, y) {
+    var it = { x: x, y: y, hx: x, hy: y, vx: 0, vy: 0, rot: rand(0, 6.28), vr: 0, rest: true };
+    if (season === 'autumn') { it.s = rand(5, 10); it.c = pick(LEAF_COLORS); }
+    else if (season === 'winter') { it.s = rand(2.5, 5.5); }
+    else if (season === 'spring') { it.kind = Math.random() < 0.22 ? 'flower' : 'seed'; it.s = rand(4, 7); }
+    else {
+      var r = Math.random();
+      if (r < 0.74) { it.kind = 'grain'; it.s = rand(1, 2.2); it.c = pick(['#d9b871', '#c9a35a', '#e6c98a']); }
+      else if (r < 0.87) { it.kind = 'shell'; it.s = rand(4, 7); it.c = pick(['#f7e3d3', '#f1b9a1', '#fff1e6']); }
+      else if (r < 0.94) { it.kind = 'star'; it.s = rand(5, 8); it.c = pick(['#e8743b', '#f0915a']); }
+      else { it.kind = 'pebble'; it.s = rand(3, 5); it.c = pick(['#9c8a74', '#b5a48c']); }
+    }
+    return it;
+  }
+
+  function buildPile() {
+    pileDark = isDark();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    PW = pc.clientWidth; PH = pc.clientHeight;
+    pc.width = PW * dpr; pc.height = PH * dpr;
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    mound = [];
+    var n = Math.max(2, Math.round(PW / 300));
+    for (var i = 0; i < n; i++) mound.push({ x: rand(PW * 0.04, PW * 0.96), w: rand(80, 200), h: rand(PH * 0.25, PH * 0.55) });
+    pile = [];
+    var count = Math.round(PW * PILE[season].per);
+    for (var j = 0; j < count; j++) {
+      var x = rand(0, PW), top = PH - moundH(x);
+      pile.push(makeItem(x, top + Math.pow(Math.random(), 2) * (PH - top) * 0.9)); // most near the surface
+    }
+    pile.sort(function (a, b) { return b.hy - a.hy; }); // surface items drawn last, on top
+    drawPile();
+  }
+
+  function drawPileItem(it) {
+    var c = pctx, s = it.s;
+    c.save(); c.translate(it.x, it.y); c.rotate(it.rot);
+    if (season === 'autumn') {
+      c.fillStyle = it.c;
+      c.beginPath(); c.moveTo(0, -s);
+      c.bezierCurveTo(s * 0.9, -s * 0.6, s * 0.7, s * 0.5, 0, s);
+      c.bezierCurveTo(-s * 0.7, s * 0.5, -s * 0.9, -s * 0.6, 0, -s); c.fill();
+      c.strokeStyle = 'rgba(60,25,10,.4)'; c.lineWidth = 0.8;
+      c.beginPath(); c.moveTo(0, -s * 0.8); c.lineTo(0, s * 1.2); c.stroke();
+    } else if (season === 'winter') {
+      c.fillStyle = pileDark ? '#f4f8fc' : '#ffffff';
+      c.beginPath(); c.arc(0, 0, s, 0, Math.PI * 2); c.fill();
+      if (!pileDark) { c.strokeStyle = 'rgba(120,155,190,.35)'; c.lineWidth = 0.7; c.stroke(); }
+    } else if (season === 'spring') {
+      if (it.kind === 'flower') {
+        c.fillStyle = '#f5c518';
+        for (var k = 0; k < 8; k++) { c.rotate(Math.PI / 4); c.beginPath(); c.ellipse(0, -s * 0.7, s * 0.28, s * 0.5, 0, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#e0a800'; c.beginPath(); c.arc(0, 0, s * 0.4, 0, Math.PI * 2); c.fill();
+      } else {
+        c.strokeStyle = 'rgba(255,255,255,.95)'; c.lineWidth = 0.7;
+        c.beginPath();
+        for (var f = 0; f < 10; f++) { var a = f / 10 * Math.PI * 2; c.moveTo(0, 0); c.lineTo(Math.cos(a) * s, Math.sin(a) * s); }
+        c.stroke();
+        c.fillStyle = '#a8916a'; c.beginPath(); c.arc(0, 0, 1.2, 0, Math.PI * 2); c.fill();
+      }
+    } else {
+      c.fillStyle = it.c;
+      if (it.kind === 'grain') { c.beginPath(); c.arc(0, 0, s, 0, Math.PI * 2); c.fill(); }
+      else if (it.kind === 'pebble') { c.beginPath(); c.ellipse(0, 0, s, s * 0.7, 0, 0, Math.PI * 2); c.fill(); }
+      else if (it.kind === 'shell') {
+        c.beginPath(); c.moveTo(0, s * 0.6); c.arc(0, s * 0.6, s * 1.2, -Math.PI * 0.85, -Math.PI * 0.15); c.closePath(); c.fill();
+        c.strokeStyle = 'rgba(150,100,80,.45)'; c.lineWidth = 0.6; c.beginPath();
+        for (var r2 = 0; r2 < 5; r2++) { var a2 = -Math.PI * 0.8 + r2 * Math.PI * 0.15; c.moveTo(0, s * 0.6); c.lineTo(Math.cos(a2) * s * 1.15, s * 0.6 + Math.sin(a2) * s * 1.15); }
+        c.stroke();
+      } else {
+        c.beginPath();
+        for (var p5 = 0; p5 < 10; p5++) { var rr = p5 % 2 ? s * 0.42 : s, a5 = p5 * Math.PI / 5 - Math.PI / 2; c.lineTo(Math.cos(a5) * rr, Math.sin(a5) * rr); }
+        c.closePath(); c.fill();
+      }
+    }
+    c.restore();
+  }
+
+  function drawPile() {
+    pctx.clearRect(0, 0, PW, PH);
+    var cfg = PILE[season];
+    pctx.beginPath(); pctx.moveTo(0, PH);
+    for (var x = 0; x <= PW + 4; x += 4) pctx.lineTo(x, PH - moundH(x) + 4);
+    pctx.lineTo(PW, PH); pctx.closePath();
+    pctx.fillStyle = pileDark ? cfg.base[1] : cfg.base[0]; pctx.fill();
+    if (season === 'winter' && !pileDark) { pctx.strokeStyle = 'rgba(120,155,190,.45)'; pctx.lineWidth = 1; pctx.stroke(); }
+    for (var i = 0; i < pile.length; i++) drawPileItem(pile[i]);
+  }
+
+  function pileFrame() {
+    pileRaf = null;
+    var cfg = PILE[season], moving = false;
+    for (var i = 0; i < pile.length; i++) {
+      var it = pile[i];
+      if (!it.rest) {
+        moving = true;
+        it.vy += cfg.g; it.vx *= cfg.drag;
+        if (season === 'spring') it.vy *= 0.96;
+        if (season === 'autumn' || season === 'spring') it.vx += Math.sin((it.y + it.x) * 0.05) * 0.04;
+        it.x += it.vx; it.y += it.vy; it.rot += it.vr;
+        if (it.x < 0) { it.x = 0; it.vx *= -0.5; }
+        if (it.x > PW) { it.x = PW; it.vx *= -0.5; }
+        if (it.y >= it.hy && it.vy > 0) {
+          it.y = it.hy;
+          if (it.vy < 1.2) { it.rest = true; it.vx = 0; it.vy = 0; it.vr = 0; }
+          else { it.vy *= -0.3; it.vx *= 0.6; }
+        }
+      } else if (Math.abs(it.x - it.hx) > 0.3) {
+        moving = true; it.x += (it.hx - it.x) * 0.015; // slowly rebuild the pile
+      }
+    }
+    drawPile();
+    if (moving) schedulePile();
+  }
+  function schedulePile() { if (!pileRaf && pileVisible) pileRaf = requestAnimationFrame(pileFrame); }
+
+  pc.addEventListener('pointermove', function (e) {
+    if (reduce) return;
+    var r = pc.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    var pvx = lastPtr ? mx - lastPtr.x : 0, pvy = lastPtr ? my - lastPtr.y : 0;
+    lastPtr = { x: mx, y: my };
+    var R = 48, hit = false, lift = season === 'spring' ? 2.5 : season === 'summer' ? 5 : 4;
+    for (var i = 0; i < pile.length; i++) {
+      var it = pile[i], dx = it.x - mx, dy = it.y - my, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < R) {
+        var f = 1 - d / R; d = d || 1;
+        it.vx += dx / d * f * 3 + pvx * 0.25 * f;
+        it.vy += -f * lift + Math.min(pvy, 0) * 0.2 * f;
+        it.vr = rand(-0.2, 0.2); it.rest = false; hit = true;
+      }
+    }
+    if (hit) schedulePile();
+  });
+  pc.addEventListener('pointerleave', function () { lastPtr = null; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { pileVisible = en[0].isIntersecting; if (pileVisible) schedulePile(); }).observe(pc);
+  }
+  window.addEventListener('resize', function () { if (pc.clientWidth !== PW) buildPile(); });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { buildPile(); });
+
+  function start() {
+    season = root.getAttribute('data-season') || 'autumn';
+    document.getElementById('season-label').textContent = LABELS[season];
+    buildPile();
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    resize();
+    ctx.clearRect(0, 0, W, H);
+    if (reduce) return; // respect "reduce motion" settings: colors change, nothing moves
+    parts = [];
+    for (var i = 0; i < COUNTS[season][0]; i++) parts.push(make(true));
+    started = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { if (raf) cancelAnimationFrame(raf); raf = null; }
+    else if (!reduce && !raf) raf = requestAnimationFrame(frame);
+  });
+  // For testing: add #winter, #spring, #summer or #autumn to the address
+  window.addEventListener('hashchange', function () {
+    var h = location.hash.slice(1);
+    if (['winter', 'spring', 'summer', 'autumn'].indexOf(h) > -1) {
+      root.setAttribute('data-season', h);
+      start();
+    }
+  });
+  start();
+
+  // ---- TEST ONLY: buttons to preview each season. Set to false to hide them. ----
+  var SHOW_SEASON_SWITCHER = true;
+  if (SHOW_SEASON_SWITCHER) {
+    var bar = document.createElement('div');
+    bar.className = 'season-switch';
+    bar.setAttribute('role', 'group');
+    bar.setAttribute('aria-label', 'Preview season');
+    bar.innerHTML = '<span>Preview:</span>' +
+      '<button type="button" data-s="winter">❄️ Winter</button>' +
+      '<button type="button" data-s="spring">🌼 Spring</button>' +
+      '<button type="button" data-s="summer">☀️ Summer</button>' +
+      '<button type="button" data-s="autumn">🍂 Autumn</button>';
+    document.body.appendChild(bar);
+    var mark = function () {
+      var cur = root.getAttribute('data-season');
+      bar.querySelectorAll('button').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-s') === cur ? 'true' : 'false');
+      });
+    };
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      root.setAttribute('data-season', b.getAttribute('data-s'));
+      start();
+      mark();
+    });
+    window.addEventListener('hashchange', mark);
+    mark();
+  }
+})();
+</script>
+</body>
+</html>
