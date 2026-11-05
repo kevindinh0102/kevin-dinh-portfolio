@@ -131,6 +131,12 @@
   .project-meta { color: var(--accent); font-size: 14px; font-weight: 600; }
   .project h3 { font-family: Fraunces, serif; font-weight: 500; font-size: 26px; line-height: 1.2; text-wrap: balance; }
   .project p { color: var(--muted); }
+  .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .projects .project { max-width: none; align-content: start; }
+  .project ul { display: grid; gap: 8px; padding-left: 18px; color: var(--text); font-size: 15px; }
+  .project li::marker { color: var(--accent); }
+  .skill-groups { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px 40px; }
+  @media (max-width: 420px) { .projects { grid-template-columns: 1fr; } }
   @media (max-width: 720px) { .project { padding: 22px; } }
 
   /* ============================================================
@@ -257,7 +263,7 @@
     <ul>
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
-      <li><a href="#project">Project</a></li>
+      <li><a href="#project">Projects</a></li>
       <li><a href="#journey">Journey</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -266,9 +272,9 @@
 
 <header class="wrap hero">
   <div>
-    <div class="eyebrow">Cybersecurity · Full-Stack · AWS</div>
+    <div class="eyebrow">Cybersecurity · Full-Stack · GRC &amp; Risk</div>
     <h1>Hi, I'm Kevin Phi Dinh.</h1>
-    <p class="lead">Cybersecurity graduate from Kristiania University College (2025). I'm looking for junior roles in cybersecurity or full-stack development in Oslo/Akershus or remote.</p>
+    <p class="lead">Cybersecurity graduate from Kristiania University College (2025) with hands-on experience from two real-world industry collaborations. I'm looking for a junior role in cybersecurity or IT development in Oslo/Akershus or remote.</p>
     <div class="cta">
       <a href="#contact" class="btn primary">Get in touch</a>
       <a href="https://www.linkedin.com/in/kevin-dinh-4637032bb/" class="btn ghost" target="_blank" rel="noopener">LinkedIn</a>
@@ -283,16 +289,16 @@
     <h2>About me</h2>
     <div class="about">
       <div>
-        <p>I'm a cybersecurity graduate from Kristiania University College with a strong foundation in secure application development, cloud security (AWS) and penetration testing.</p>
-        <p>What I value most is continuous learning and applying technical depth to real problems. I bring reliability, structure and drive to a professional environment.</p>
-        <p>Alongside my job search I work part-time at a sushi restaurant, and in my free time I'm a youth leader in my church.</p>
+        <p>I'm a cybersecurity graduate with hands-on experience in secure application development, cloud security (AWS), penetration testing and GRC.</p>
+        <p>In two real-world industry collaborations I contributed across the full stack, from backend APIs and frontend UI to mobile development and AI integration. I'm a structured and reliable team player who takes ownership of concrete deliverables and thrives in fast-paced, Agile environments.</p>
+        <p>I'm looking for a junior role in cybersecurity or IT development where technical depth and continuous learning are valued. Outside of work I'm a youth leader in my church.</p>
       </div>
       <ul class="facts">
-        <li><span>Location</span><span>Ytre Enebakk, Norway</span></li>
-        <li><span>Education</span><span>BSc in Cybersecurity, Kristiania (2022–2025)</span></li>
-        <li><span>Looking for</span><span>SOC, GRC, cloud security, AppSec or full-stack</span></li>
+        <li><span>Location</span><span>Ytre Enebakk, near Oslo</span></li>
+        <li><span>Education</span><span>Bachelor in IT – Cybersecurity, Kristiania (2022–2025)</span></li>
+        <li><span>Looking for</span><span>SOC, GRC, cloud security, AppSec or IT development</span></li>
         <li><span>Work area</span><span>Oslo/Akershus or remote</span></li>
-        <li><span>Languages</span><span>Norwegian, English, Vietnamese</span></li>
+        <li><span>Languages</span><span>Vietnamese (native), Norwegian and English (fluent)</span></li>
       </ul>
     </div>
   </div>
@@ -306,32 +312,60 @@
         <h3 class="group-label">Security</h3>
         <div class="tags">
           <span class="tag">Penetration testing</span>
-          <span class="tag">Information security</span>
+          <span class="tag">GRC</span>
+          <span class="tag">ISO 27001</span>
           <span class="tag">Cloud security (AWS)</span>
-          <span class="tag">Secure application development</span>
           <span class="tag">Burp Suite</span>
           <span class="tag">Wireshark</span>
         </div>
       </div>
       <div>
-        <h3 class="group-label">Development</h3>
+        <h3 class="group-label">Programming</h3>
         <div class="tags">
           <span class="tag">Python</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">Kotlin</span>
           <span class="tag">C</span>
           <span class="tag">Java</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">React</span>
-          <span class="tag">Next.js</span>
-          <span class="tag">OpenAI API</span>
         </div>
       </div>
       <div>
-        <h3 class="group-label">Other</h3>
+        <h3 class="group-label">Web &amp; app</h3>
         <div class="tags">
-          <span class="tag">User testing</span>
-          <span class="tag">Leadership</span>
-          <span class="tag">Customer service</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">React Native</span>
+          <span class="tag">Tailwind CSS</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="group-label">Cloud &amp; data</h3>
+        <div class="tags">
+          <span class="tag">AWS</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">SQL/MySQL</span>
+          <span class="tag">Vercel</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="group-label">AI</h3>
+        <div class="tags">
+          <span class="tag">OpenAI APIs (GPT-4, DALL·E, Whisper)</span>
+          <span class="tag">Prompt engineering</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="group-label">Tools &amp; methods</h3>
+        <div class="tags">
+          <span class="tag">Git &amp; GitHub</span>
+          <span class="tag">VS Code</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Draw.io</span>
+          <span class="tag">Agile / Scrum</span>
+          <span class="tag">Lean Startup</span>
         </div>
       </div>
     </div>
@@ -340,19 +374,43 @@
 
 <section id="project">
   <div class="wrap">
-    <h2>Project</h2>
-    <article class="project">
-      <div class="project-meta">Bachelor's degree · In collaboration with Yobr AS</div>
-      <h3>AI agent MVP, from idea to deployment</h3>
-      <p>Together with my team, I built an end-to-end AI agent MVP for a real company. We worked across architecture, development, API integration and user testing. The project gave me hands-on experience delivering a full-stack product in a professional setting, from initial design through to deployment.</p>
-      <div class="tags">
-        <span class="tag">TypeScript</span>
-        <span class="tag">React</span>
-        <span class="tag">Next.js</span>
-        <span class="tag">OpenAI API</span>
-        <span class="tag">User testing</span>
-      </div>
-    </article>
+    <h2>Projects</h2>
+    <div class="projects">
+      <article class="project">
+        <div class="project-meta">Bachelor project · Jan – May 2025 · Kristiania × Yobr AS</div>
+        <h3>MVP AI agent for hybrid student teams</h3>
+        <p>Group project in collaboration with a real company.</p>
+        <ul>
+          <li>Took personal responsibility for the frontend (React, Next.js, Tailwind CSS) and the backend API layer (Node.js), building and integrating several core modules.</li>
+          <li>Built the image generation module (DALL·E), the file analysis feature and a data visualization component as my own deliverables.</li>
+          <li>Integrated real-world APIs from Brønnøysundregistrene and data.norge.no, using TypeScript throughout.</li>
+          <li>Took part in Agile sprints, Lean Startup reviews and structured user testing with semi-structured interviews.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">OpenAI API</span>
+        </div>
+      </article>
+      <article class="project">
+        <div class="project-meta">2023 – 2024 · Kristiania × No Isolation</div>
+        <h3>StudyBuddy, a mobile app for student networking</h3>
+        <p>Group project in collaboration with a real company.</p>
+        <ul>
+          <li>Worked across the full stack of an Android app built with React Native (JavaScript), later migrated to Kotlin with Google Firebase.</li>
+          <li>Built frontend UI and Firebase integration (authentication, real-time database, location features), and prototyped in Figma and Balsamiq.</li>
+          <li>Ran a market survey with 160 respondents and several rounds of user testing, and delivered a working app to Google Play Store.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">React Native</span>
+          <span class="tag">Kotlin</span>
+          <span class="tag">Firebase</span>
+          <span class="tag">Figma</span>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -386,12 +444,22 @@
       <li>
         <div class="when">Now</div>
         <h3>Looking for a junior role</h3>
-        <p>In SOC, GRC, cloud security, AppSec or full-stack development, in Oslo/Akershus or remote.</p>
+        <p>In cybersecurity (SOC, GRC, cloud security, AppSec) or IT development, in Oslo/Akershus or remote.</p>
       </li>
       <li>
-        <div class="when">Part-time</div>
-        <h3>Sushi restaurant</h3>
-        <p>Service, teamwork and a fast pace on busy days.</p>
+        <div class="when">Summer 2026 – present</div>
+        <h3>Kitchen staff · Part-time (40%)</h3>
+        <p>Reliable and steady in a fast-paced kitchen while actively pursuing a career in cybersecurity.</p>
+      </li>
+      <li>
+        <div class="when">2025 – Summer 2026</div>
+        <h3>Teaching assistant · OKS Friskole, Lillestrøm</h3>
+        <p>Structured and adapted tasks for students with diverse learning needs, kept calm and safe structure in demanding situations, and worked closely with teachers and support staff in an inclusive team.</p>
+      </li>
+      <li>
+        <div class="when">2022 – 2025</div>
+        <h3>Bachelor in Information Technology – Cybersecurity · Kristiania University College</h3>
+        <p>Ethical hacking, cyber defense, GRC, cloud security (AWS), IoT/OT security, penetration testing, algorithms and data structures, AI, web and app development, and secure Linux programming in C.</p>
       </li>
       <li>
         <div class="when">Volunteer</div>
@@ -399,9 +467,9 @@
         <p>Planning activities and looking after the young people in the group.</p>
       </li>
       <li>
-        <div class="when">2022 – 2025</div>
-        <h3>BSc in Cybersecurity – Kristiania University College</h3>
-        <p>Secure application development, cloud security, penetration testing and an AI project with Yobr AS.</p>
+        <div class="when">2017 – 2024</div>
+        <h3>Kitchen and restaurant roles</h3>
+        <p>Various employers. Teamwork, service and a fast pace.</p>
       </li>
     </ul>
   </div>
