@@ -208,9 +208,9 @@
   @media (prefers-reduced-motion: reduce) { #sun { animation: none; } }
 
   /* Pile of snow / leaves / seeds / sand at the bottom of the page */
-  .pile { position: relative; z-index: 2; height: 150px; }
+  .pile { position: relative; z-index: 2; height: 190px; }
   #pile { display: block; width: 100%; height: 100%; touch-action: pan-y; }
-  @media (max-width: 720px) { .pile { height: 110px; } }
+  @media (max-width: 720px) { .pile { height: 160px; } }
 
   /* TEST: season switcher (turn off with SHOW_SEASON_SWITCHER = false in the script) */
   .season-switch {
@@ -613,9 +613,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
     return (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) < 110;
   }
   function moundH(x) {
-    var h = PH * 0.12;
+    var h = PH * 0.1;
     for (var i = 0; i < mound.length; i++) { var d = (x - mound[i].x) / mound[i].w; h += mound[i].h * Math.exp(-d * d); }
-    var cap = PH * 0.8;
+    var cap = PH * 0.5;
     return cap * (1 - Math.exp(-h / cap)); // soft cap: rounded tops, never flat
   }
   function makeItem(x, y) {
@@ -641,7 +641,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     mound = [];
     var n = Math.max(2, Math.round(PW / 300));
-    for (var i = 0; i < n; i++) mound.push({ x: rand(PW * 0.04, PW * 0.96), w: rand(80, 200), h: rand(PH * 0.25, PH * 0.55) });
+    for (var i = 0; i < n; i++) mound.push({ x: rand(PW * 0.04, PW * 0.96), w: rand(80, 200), h: rand(PH * 0.15, PH * 0.35) });
     pile = [];
     var count = Math.round(PW * PILE[season].per);
     for (var j = 0; j < count; j++) {
@@ -649,7 +649,194 @@ document.getElementById('year').textContent = new Date().getFullYear();
       pile.push(makeItem(x, top + Math.pow(Math.random(), 2) * (PH - top) * 0.9)); // most near the surface
     }
     pile.sort(function (a, b) { return b.hy - a.hy; }); // surface items drawn last, on top
+    var cs = getComputedStyle(root);
+    tok = { surface: cs.getPropertyValue('--surface').trim(), text: cs.getPropertyValue('--text').trim(), line: cs.getPropertyValue('--line').trim() };
+    cat.x = Math.max(40, Math.min(PW - 40, cat.x));
+    if (cat.target > PW - 40) cat.target = rand(40, PW - 40);
     drawPile();
+    schedulePile();
+  }
+
+  // ---------- Meo the cat: walks around, sits, swats and pounces into the pile ----------
+  var tok = {};
+  var CAT = { fur: '#8a7a66', far: '#6c5f50', stripe: '#463b31', white: '#fbfaf6', paleLeg: '#dcd8cf', pink: '#e9a1a4', eye: '#c3cf55', nose: '#e2899a' };
+  var cat = { x: 90, dir: 1, state: 'walk', t: 0, phase: 0, z: 0, vz: 0, vx: 0, target: 320, bubble: '', bubbleT: 0, greeted: false, mouseX: null, mouseT: 0, cool: 0 };
+
+  function catK() { return PH / 190 * 1.35; }
+  function groundY(x) { return PH - moundH(Math.max(0, Math.min(PW, x))) + 3; }
+  function say(text, frames) { cat.bubble = text; cat.bubbleT = frames || 100; }
+  function setState(s, t0) { cat.state = s; cat.t = t0 || 0; }
+  function wander() { cat.target = rand(40, PW - 40); setState('walk'); }
+  function pickNext() {
+    var r = Math.random();
+    if (r < 0.3) setState('sit');
+    else if (r < 0.6) setState('crouch');
+    else if (r < 0.8) setState('swat');
+    else wander();
+  }
+  // Push pile items away from a point (used by paws and landings)
+  function scatterAt(x, y, R, power, dirx) {
+    for (var i = 0; i < pile.length; i++) {
+      var it = pile[i], dx = it.x - x, dy = it.y - y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < R) {
+        var f = 1 - d / R; d = d || 1;
+        it.vx += (dx / d * 1.4 + (dirx || 0)) * f * power;
+        it.vy -= f * power * (season === 'spring' ? 0.7 : 1.1);
+        it.vr = rand(-0.2, 0.2); it.rest = false;
+      }
+    }
+  }
+
+  function updateCat() {
+    var k = catK();
+    cat.t++;
+    if (cat.bubbleT > 0) cat.bubbleT--;
+    if (cat.cool > 0) cat.cool--;
+    if (cat.mouseT > 0) cat.mouseT--;
+    // Curious about the mouse: walk over and pounce at it
+    if (cat.mouseT > 0 && cat.mouseX !== null && cat.cool === 0 && cat.state !== 'crouch' && cat.state !== 'jump') {
+      var dm = cat.mouseX - cat.x;
+      if (Math.abs(dm) < 95 * k) { cat.dir = dm >= 0 ? 1 : -1; cat.target = cat.mouseX; setState('crouch', 20); cat.cool = 170; }
+      else { cat.target = cat.mouseX; if (cat.state !== 'walk') setState('walk'); }
+    }
+    if (cat.state === 'walk') {
+      var d = cat.target - cat.x, sp = (cat.mouseT > 0 ? 1.9 : 1.0) * k;
+      cat.dir = d >= 0 ? 1 : -1;
+      if (Math.abs(d) < sp * 2) pickNext();
+      else {
+        var before = Math.sin(cat.phase);
+        cat.x += cat.dir * sp; cat.phase += 0.17 * sp / k;
+        if ((before < 0) !== (Math.sin(cat.phase) < 0)) { // a paw touches down
+          var px = cat.x + cat.dir * 18 * k;
+          scatterAt(px, groundY(px), 13 * k, 1.3, cat.dir * 0.5);
+        }
+      }
+    } else if (cat.state === 'sit') {
+      if (cat.t > 220) wander();
+    } else if (cat.state === 'swat') {
+      if (cat.t % 30 === 12) { var sx = cat.x + cat.dir * 26 * k; scatterAt(sx, groundY(sx), 20 * k, 2.6, cat.dir); }
+      if (cat.t > 110) wander();
+    } else if (cat.state === 'crouch') {
+      if (cat.t > 70) {
+        var g = 0.22 * k, vz = 4.4 * k, flight = 2 * vz / g;
+        cat.vz = vz;
+        cat.vx = Math.max(-3.4 * k, Math.min(3.4 * k, cat.mouseT > 0 ? (cat.target - cat.x) / flight : cat.dir * 2.6 * k));
+        if (Math.abs(cat.vx) < 0.8 * k) cat.vx = cat.dir * 0.8 * k;
+        setState('jump');
+      }
+    } else if (cat.state === 'jump') {
+      cat.x += cat.vx; cat.z += cat.vz; cat.vz -= 0.22 * k;
+      if (cat.x < 30 * k || cat.x > PW - 30 * k) { cat.vx *= -1; cat.dir *= -1; cat.x = Math.max(30 * k, Math.min(PW - 30 * k, cat.x)); }
+      if (cat.z <= 0) {
+        cat.z = 0;
+        var lx = cat.x + cat.dir * 12 * k;
+        scatterAt(lx, groundY(lx), 46 * k, 3.4, cat.dir * 0.4);
+        setState('sit', 120);
+      }
+    }
+  }
+
+  function drawCat() {
+    var k = catK(), c = pctx, C = CAT, st = cat.state, t = cat.t, ph = cat.phase;
+    var gx = cat.x, gy = groundY(gx) - cat.z;
+    var slope = cat.z > 0 ? 0 : Math.atan2(groundY(gx + 12) - groundY(gx - 12), 24) * 0.7;
+    var H, S, head, tail, fb, nb, ff, nf, swing = Math.sin(ph) * 6;
+    if (st === 'sit' || st === 'swat') {
+      H = [-10, -12]; S = [8, -30]; head = [13, -44];
+      fb = [-4, 0]; nb = [0, 0]; ff = [8, 0]; nf = [12, 0];
+      var sw = Math.sin(t * 0.05) * 4;
+      tail = [[-18, -2], [6, 3], [22 + sw, -1]];
+      if (st === 'swat') { var a = Math.sin(t * 0.21); nf = [20 + a * 8, -14 - Math.abs(a) * 6]; }
+    } else if (st === 'crouch') {
+      var wig = Math.sin(t * 0.7) * 2.5;
+      H = [-18 + wig, -16]; S = [14, -12]; head = [26, -18];
+      fb = [-14, 0]; nb = [-10, 0]; ff = [18, 0]; nf = [22, 0];
+      tail = [[-30, -14], [-40, -6 + Math.sin(t * 0.5) * 3], [-48, -12 + Math.sin(t * 0.9) * 4]];
+    } else if (st === 'jump') {
+      H = [-18, -22]; S = [16, -28]; head = [28, -38];
+      fb = [-30, -14]; nb = [-26, -12]; ff = [32, -20]; nf = [34, -24];
+      tail = [[-30, -24], [-42, -26], [-52, -30]];
+    } else {
+      H = [-18, -24]; S = [16, -25]; head = [27, -37];
+      fb = [-18 - swing, 0]; nb = [-14 + swing, 0]; ff = [16 + swing, 0]; nf = [20 - swing, 0];
+      var tw = Math.sin(ph * 0.5) * 3;
+      tail = [[-30, -30], [-40, -46 + tw], [-34, -60 + tw]];
+    }
+    c.save();
+    c.translate(gx, gy); c.rotate(slope); c.scale(cat.dir * k, k);
+    c.lineCap = 'round'; c.lineJoin = 'round';
+    function seg(p, q, w, col) { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(p[0], p[1]); c.lineTo(q[0], q[1]); c.stroke(); }
+    function dot(p, r, col) { c.fillStyle = col; c.beginPath(); c.arc(p[0], p[1], r, 0, Math.PI * 2); c.fill(); }
+    function mid(p, q) { return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]; }
+
+    // far legs
+    seg(H, fb, 7, C.far); dot(fb, 3.6, C.white);
+    seg(S, ff, 7, C.far); seg(mid(S, ff), ff, 7, C.paleLeg); dot(ff, 3.6, C.white);
+    // striped tail
+    c.strokeStyle = C.fur; c.lineWidth = 6; c.beginPath(); c.moveTo(H[0], H[1]);
+    c.bezierCurveTo(tail[0][0], tail[0][1], tail[1][0], tail[1][1], tail[2][0], tail[2][1]); c.stroke();
+    c.setLineDash([3, 5]); c.strokeStyle = C.stripe; c.stroke(); c.setLineDash([]);
+    dot(tail[2], 3, C.stripe);
+    // haunch when sitting
+    if (st === 'sit' || st === 'swat') dot([H[0] + 2, H[1] + 1], 12, C.fur);
+    // body
+    seg(H, S, 24, C.fur);
+    var nx = S[0] - H[0], ny = S[1] - H[1], L = Math.sqrt(nx * nx + ny * ny) || 1;
+    var ox = -ny / L * 7, oy = nx / L * 7; // points toward the belly
+    seg([H[0] + nx * 0.25 + ox, H[1] + ny * 0.25 + oy], [S[0] + ox * 0.6, S[1] + oy * 0.6], 9, C.white);
+    dot([S[0] + 4, S[1] + 4], 8, C.white); // white chest
+    c.strokeStyle = C.stripe; c.lineWidth = 2.4;
+    for (var i = 1; i < 6; i++) { // tabby stripes on the back
+      var px = H[0] + nx * i / 6, py = H[1] + ny * i / 6;
+      c.beginPath(); c.moveTo(px - ox * 1.6, py - oy * 1.6); c.lineTo(px - ox * 0.4 + nx * 0.04, py - oy * 0.4 + ny * 0.04); c.stroke();
+    }
+    // near legs with white paws
+    seg(H, nb, 7, C.fur); dot(nb, 3.8, C.white);
+    seg(S, nf, 7, C.fur); seg(mid(S, nf), nf, 7, C.white); dot(nf, 3.8, C.white);
+    // head
+    var hx = head[0], hy = head[1];
+    c.fillStyle = C.fur;
+    c.beginPath(); c.moveTo(hx - 8, hy - 5); c.lineTo(hx - 6, hy - 17); c.lineTo(hx + 1, hy - 9); c.fill();
+    c.beginPath(); c.moveTo(hx + 1, hy - 9); c.lineTo(hx + 7, hy - 17); c.lineTo(hx + 9, hy - 4); c.fill();
+    c.fillStyle = C.pink;
+    c.beginPath(); c.moveTo(hx - 6, hy - 7); c.lineTo(hx - 5.5, hy - 13.5); c.lineTo(hx - 1.5, hy - 9); c.fill();
+    c.beginPath(); c.moveTo(hx + 3, hy - 9); c.lineTo(hx + 6.5, hy - 13.5); c.lineTo(hx + 7.5, hy - 6); c.fill();
+    dot([hx, hy], 11, C.fur);
+    seg([hx - 4, hy - 10], [hx - 3, hy - 5], 1.8, C.stripe);
+    seg([hx, hy - 11], [hx, hy - 6], 1.8, C.stripe);
+    seg([hx - 7, hy - 3], [hx - 4, hy - 1], 1.6, C.stripe);
+    c.fillStyle = C.white; // white muzzle and blaze
+    c.beginPath(); c.ellipse(hx + 7, hy + 4, 6.5, 5.5, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(hx + 7, hy - 3, 2.2, 5.5, 0.35, 0, Math.PI * 2); c.fill();
+    var blink = (st === 'sit' && t % 170 < 7);
+    if (blink) { seg([hx + 1, hy - 2], [hx + 6, hy - 2], 1.4, C.stripe); }
+    else {
+      c.fillStyle = C.eye; c.beginPath(); c.ellipse(hx + 3.5, hy - 2, 2.9, 2.5, 0, 0, Math.PI * 2); c.fill();
+      var big = st === 'crouch' || st === 'jump';
+      c.fillStyle = '#1d1a16'; c.beginPath(); c.ellipse(hx + 4.3, hy - 2, big ? 1.9 : 0.9, 2.2, 0, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = C.nose;
+    c.beginPath(); c.moveTo(hx + 11.5, hy + 0.5); c.lineTo(hx + 13.5, hy + 0.5); c.lineTo(hx + 12.6, hy + 2.6); c.fill();
+    c.strokeStyle = 'rgba(200,200,200,.8)'; c.lineWidth = 0.6;
+    c.beginPath(); c.moveTo(hx + 10, hy + 4); c.lineTo(hx + 22, hy + 1); c.moveTo(hx + 10, hy + 5); c.lineTo(hx + 22, hy + 6); c.stroke();
+    c.restore();
+
+    // speech bubble
+    if (cat.bubbleT > 0 && cat.bubble) {
+      c.save();
+      c.font = '600 12px Inter, system-ui, sans-serif';
+      var w = c.measureText(cat.bubble).width + 18, hgt = 24;
+      var bx = Math.max(4, Math.min(PW - w - 4, gx + cat.dir * head[0] * k - w / 2));
+      var by = Math.max(4, gy + head[1] * k - 30 * k - hgt);
+      c.globalAlpha = Math.min(1, cat.bubbleT / 15);
+      c.fillStyle = tok.surface || '#fff'; c.strokeStyle = tok.line || '#ccc'; c.lineWidth = 1;
+      c.beginPath();
+      if (c.roundRect) c.roundRect(bx, by, w, hgt, 12); else c.rect(bx, by, w, hgt);
+      c.fill(); c.stroke();
+      c.fillStyle = tok.text || '#222'; c.textBaseline = 'middle';
+      c.fillText(cat.bubble, bx + 9, by + hgt / 2 + 0.5);
+      c.restore();
+    }
   }
 
   function drawPileItem(it) {
@@ -705,6 +892,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     pctx.fillStyle = pileDark ? cfg.base[1] : cfg.base[0]; pctx.fill();
     if (season === 'winter' && !pileDark) { pctx.strokeStyle = 'rgba(120,155,190,.45)'; pctx.lineWidth = 1; pctx.stroke(); }
     for (var i = 0; i < pile.length; i++) drawPileItem(pile[i]);
+    drawCat();
   }
 
   function pileFrame() {
@@ -729,8 +917,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
         moving = true; it.x += (it.hx - it.x) * 0.015; // slowly rebuild the pile
       }
     }
+    if (!reduce) updateCat();
     drawPile();
-    if (moving) schedulePile();
+    if (moving || !reduce) schedulePile(); // the cat keeps the pile alive while it is on screen
   }
   function schedulePile() { if (!pileRaf && pileVisible) pileRaf = requestAnimationFrame(pileFrame); }
 
@@ -739,6 +928,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     var r = pc.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
     var pvx = lastPtr ? mx - lastPtr.x : 0, pvy = lastPtr ? my - lastPtr.y : 0;
     lastPtr = { x: mx, y: my };
+    cat.mouseX = mx; cat.mouseT = 90;
     var R = 48, hit = false, lift = season === 'spring' ? 2.5 : season === 'summer' ? 5 : 4;
     for (var i = 0; i < pile.length; i++) {
       var it = pile[i], dx = it.x - mx, dy = it.y - my, d = Math.sqrt(dx * dx + dy * dy);
@@ -751,9 +941,24 @@ document.getElementById('year').textContent = new Date().getFullYear();
     }
     if (hit) schedulePile();
   });
-  pc.addEventListener('pointerleave', function () { lastPtr = null; });
+  pc.addEventListener('pointerleave', function () { lastPtr = null; cat.mouseX = null; });
+  // Click or tap the cat
+  pc.addEventListener('pointerdown', function (e) {
+    var r = pc.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, k = catK();
+    if (Math.abs(mx - cat.x) < 40 * k && my > groundY(cat.x) - cat.z - 70 * k) {
+      say(pick(['Meow!', 'Mrrp?', 'Purrr…']), 90);
+      if (!reduce && cat.state !== 'jump') { cat.mouseT = 0; setState('crouch', 40); }
+      else drawPile();
+    }
+  });
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) { pileVisible = en[0].isIntersecting; if (pileVisible) schedulePile(); }).observe(pc);
+    new IntersectionObserver(function (en) {
+      pileVisible = en[0].isIntersecting;
+      if (pileVisible) {
+        if (!cat.greeted) { cat.greeted = true; say("Hi, I'm Meo!", 160); }
+        schedulePile();
+      }
+    }).observe(pc);
   }
   window.addEventListener('resize', function () { if (pc.clientWidth !== PW) buildPile(); });
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { buildPile(); });
